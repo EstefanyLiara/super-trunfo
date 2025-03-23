@@ -5,12 +5,14 @@
 
 typedef struct {
     char estado[50];
-    int codigo;
+    char codigo[50];
     char nome[50];
     int populacao;
     double pib;
     double area;
     int pontos_turisticos;
+    double superpoder;
+    double densidade;
 } Carta;
 
 double calcularDensidade(Carta c) {
@@ -22,48 +24,58 @@ double calcularPibPerCapita(Carta c) {
 }
 
 void exibirCarta(Carta c, int indice) {
+    //c.densidade = c.area > 0 ? c.populacao / c.area : 0;
     printf("\n--- Carta %d ---\n", indice + 1);
     printf("Estado: %s\n", c.estado);
-    printf("Codigo: %d\n", c.codigo);
+    printf("Código: %s%s\n", c.estado,c.codigo);
     printf("Cidade: %s\n", c.nome);
-    printf("Populacao: %d\n", c.populacao);
-    printf("PIB: %.2f bilhoes\n", c.pib);
-    printf("Area: %.2f km2\n", c.area);
-    printf("Pontos turisticos: %d\n", c.pontos_turisticos);
-    printf("Densidade populacional: %.2f hab/km2\n", calcularDensidade(c));
+    printf("População: %d\n", c.populacao);
+    printf("PIB: %.2f bilhões\n", c.pib);
+    printf("Área: %.2f km²\n", c.area);
+    printf("Pontos turísticos: %d\n", c.pontos_turisticos);
+    printf("Densidade populacional: %.2f hab/km²\n", calcularDensidade(c));
     printf("PIB per capita: %.2f\n", calcularPibPerCapita(c));
+
+    c.superpoder = c.pib + c.area + c.populacao + c.pib + calcularDensidade(c);
+
+    printf("Super poder: %.2f",c.superpoder);
 }
 
 void compararCartas(Carta c1, Carta c2, int atributo) {
     double valor1, valor2;
-    printf("\nComparacao entre %s e %s:\n", c1.nome, c2.nome);
+    printf("\nComparação entre %s e %s:\n", c1.nome, c2.nome);
     switch (atributo) {
         case 1: 
             valor1 = c1.populacao; valor2 = c2.populacao;
-            printf("Populacao: %d vs %d\n", c1.populacao, c2.populacao);
+            printf("População: %d vs %d\n", c1.populacao, c2.populacao);
             break;
         case 2: 
             valor1 = c1.pib; valor2 = c2.pib;
-            printf("PIB: %.2f vs %.2f bilhoes\n", c1.pib, c2.pib);
+            printf("PIB: %.2f vs %.2f bilhões\n", c1.pib, c2.pib);
             break;
         case 3: 
             valor1 = c1.area; valor2 = c2.area;
-            printf("Area: %.2f vs %.2f km2\n", c1.area, c2.area);
+            printf("Área: %.2f vs %.2f km²\n", c1.area, c2.area);
             break;
         case 4: 
             valor1 = c1.pontos_turisticos; valor2 = c2.pontos_turisticos;
-            printf("Pontos turisticos: %d vs %d\n", c1.pontos_turisticos, c2.pontos_turisticos);
+            printf("Pontos turísticos: %d vs %d\n", c1.pontos_turisticos, c2.pontos_turisticos);
             break;
         case 5: 
             valor1 = calcularDensidade(c1); valor2 = calcularDensidade(c2);
-            printf("Densidade populacional: %.2f vs %.2f hab/km2\n", valor1, valor2);
+            printf("Densidade populacional: %.2f vs %.2f hab/km²\n", valor1, valor2);
             break;
         case 6: 
             valor1 = calcularPibPerCapita(c1); valor2 = calcularPibPerCapita(c2);
             printf("PIB per capita: %.2f vs %.2f\n", valor1, valor2);
+            break;       
+        case 7: 
+            valor1 = c1.superpoder; valor2 = c2.superpoder;
+            printf("População: %.2lf vs %.2lf\n", c1.superpoder, c2.superpoder);
             break;
+
         default: 
-            printf("Atributo invalido!\n");
+            printf("Atributo inválido!\n");
             return;
     }
     
@@ -90,7 +102,7 @@ int main() {
         printf("2. Exibir cartas\n");
         printf("3. Comparar cartas\n");
         printf("0. Sair\n");
-        printf("Escolha uma opcao: ");
+        printf("Escolha uma opção: ");
         scanf("%d", &opcao);
         getchar(); // Limpa buffer
 
@@ -101,7 +113,7 @@ int main() {
                     fgets(cartas[num_cartas].estado, 50, stdin);
                     strtok(cartas[num_cartas].estado, "\n");
         
-                    printf("Codigo: ");
+                    printf("Código: ");
                     scanf("%d", &cartas[num_cartas].codigo);
         
                     printf("Nome da cidade: ");
@@ -109,16 +121,16 @@ int main() {
                     fgets(cartas[num_cartas].nome, 50, stdin);
                     strtok(cartas[num_cartas].nome, "\n");
         
-                    printf("Populacao: ");
+                    printf("População: ");
                     scanf("%d", &cartas[num_cartas].populacao);
         
-                    printf("PIB (em bilhoes): ");
+                    printf("PIB (em bilhões): ");
                     scanf("%lf", &cartas[num_cartas].pib);
         
-                    printf("Area (km2): ");
+                    printf("Área (km²): ");
                     scanf("%lf", &cartas[num_cartas].area);
         
-                    printf("Pontos turisticos: ");
+                    printf("Pontos turísticos: ");
                     scanf("%d", &cartas[num_cartas].pontos_turisticos);
         
                     num_cartas++;
@@ -147,23 +159,23 @@ int main() {
                 scanf("%d %d", &c1, &c2);
                 
                 if (c1 < 0 || c1 >= num_cartas || c2 < 0 || c2 >= num_cartas || c1 == c2) {
-                    printf("Cartas invalidas!\n");
+                    printf("Cartas inválidas!\n");
                     break;
                 }
 
-                printf("\nEscolha o atributo para comparacao:\n");
-                printf("1. Populacao\n2. PIB\n3. Area\n4. Pontos turisticos\n5. Densidade populacional\n6. PIB per capita\n");
+                printf("\nEscolha o atributo para comparação:\n");
+                printf("1. População\n2. PIB\n3. Área\n4. Pontos turísticos\n5. Densidade populacional\n6. PIB per capita\n7. Super poder\n");
                 scanf("%d", &atributo);
 
                 compararCartas(cartas[c1], cartas[c2], atributo);
                 break;
 
             case 0:
-                printf("\nObrigado por jogar! Ate a proxima!\n");
+                printf("\nObrigado por jogar! Até a próxima!\n");
                 break;
 
             default:
-                printf("Opcao invalida! Tente novamente.\n");
+                printf("Opção inválida! Tente novamente.\n");
         }
     } while (opcao != 0);
 
